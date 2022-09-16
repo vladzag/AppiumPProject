@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -17,7 +18,7 @@ import java.net.URL;
 public class AppiumWebTest {
 
     @Test
-    public void someTestName() throws MalformedURLException {
+    public void someTestName() throws MalformedURLException, InterruptedException {
         URL serverURL = new URL("http://0.0.0.0:4723/wd/hub");
         DesiredCapabilities capabilities = new DesiredCapabilities();
         capabilities.setCapability(MobileCapabilityType.PLATFORM_NAME, "iOS");
@@ -32,11 +33,11 @@ public class AppiumWebTest {
         AppiumDriver driver = new IOSDriver(serverURL, capabilities);
         driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
         driver.get("https://www.wikipedia.org/");
-        driver.findElement(By.id("searchInput")).sendKeys("meadow", Keys.ENTER);
+        driver.findElement(By.id("searchInput")).sendKeys("meadow");
+        WebElement someElement = driver.findElement(new By.ByCssSelector("#search-form > fieldset > button"));
+        someElement.click();
+        Thread.sleep(3000);
         Assertions.assertTrue(driver.getCurrentUrl().equals("https://en.wikipedia.org/wiki/Meadow"));
-
-
-
         driver.quit();
     }
 }
