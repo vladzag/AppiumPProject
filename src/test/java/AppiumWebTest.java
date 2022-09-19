@@ -10,6 +10,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import java.net.MalformedURLException;
@@ -72,10 +73,34 @@ public class AppiumWebTest {
         capabilities.setCapability("autoAcceptAlerts", "true");
 
         AppiumDriver driver = new IOSDriver(serverURL, capabilities);
-        driver.manage().timeouts().implicitlyWait(50, TimeUnit.SECONDS);
+        driver.manage().timeouts().implicitlyWait(100, TimeUnit.SECONDS);
         driver.get(WikiPageStart);
         driver.findElement(By.id(languageSetting)).click();
         Assertions.assertTrue(driver.getCurrentUrl().equals(resultingPageWiki));
     }
 
+    @Test
+    public void readWikiInAnotherLanguage() throws MalformedURLException {
+        URL serverURL = new URL("http://0.0.0.0:4723/wd/hub");
+        DesiredCapabilities capabilities = new DesiredCapabilities();
+        capabilities.setCapability(MobileCapabilityType.PLATFORM_NAME, "iOS");
+        capabilities.setCapability(MobileCapabilityType.PLATFORM_VERSION, "15.5");
+        capabilities.setCapability(MobileCapabilityType.DEVICE_NAME, "iPhone 8");
+        capabilities.setCapability(MobileCapabilityType.AUTOMATION_NAME, "Appium");
+        capabilities.setCapability(MobileCapabilityType.BROWSER_NAME, "Safari");
+        capabilities.setCapability(MobileCapabilityType.FULL_RESET, "true");
+        capabilities.setCapability("showXcodeLog", "true");
+        capabilities.setCapability("autoAcceptAlerts", "true");
+        AppiumDriver driver = new IOSDriver(serverURL, capabilities);
+        driver.manage().timeouts().implicitlyWait(100, TimeUnit.SECONDS);
+
+        driver.get(WikiPageStart);
+        driver.findElement(AppiumTestsSelectors.readWikiInAnotherLanguageButtonSelector).click();
+        List<WebElement> languageElementList = driver.findElements(AppiumTestsSelectors.languageListsByClassSelector);
+        for (int i = 0; i < languageElementList.size(); i++) {
+           Assertions.assertTrue(languageElementList.get(i).isDisplayed());
+        }
+
+        driver.quit();
+    }
 }
