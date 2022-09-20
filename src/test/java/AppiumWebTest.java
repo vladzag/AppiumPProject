@@ -98,9 +98,32 @@ public class AppiumWebTest {
         driver.findElement(AppiumTestsSelectors.readWikiInAnotherLanguageButtonSelector).click();
         List<WebElement> languageElementList = driver.findElements(AppiumTestsSelectors.languageListsByClassSelector);
         for (int i = 0; i < languageElementList.size(); i++) {
-           Assertions.assertTrue(languageElementList.get(i).isDisplayed());
+            Assertions.assertTrue(languageElementList.get(i).isDisplayed());
         }
 
+        driver.quit();
+    }
+
+    @Test
+    public void someTestName() throws MalformedURLException {
+        URL serverURL = new URL("http://0.0.0.0:4723/wd/hub");
+        DesiredCapabilities capabilities = new DesiredCapabilities();
+        capabilities.setCapability(MobileCapabilityType.PLATFORM_NAME, "iOS");
+        capabilities.setCapability(MobileCapabilityType.PLATFORM_VERSION, "15.5");
+        capabilities.setCapability(MobileCapabilityType.DEVICE_NAME, "iPhone 8");
+        capabilities.setCapability(MobileCapabilityType.AUTOMATION_NAME, "Appium");
+        capabilities.setCapability(MobileCapabilityType.BROWSER_NAME, "Safari");
+        capabilities.setCapability(MobileCapabilityType.FULL_RESET, "true");
+        capabilities.setCapability("showXcodeLog", "true");
+        capabilities.setCapability("autoAcceptAlerts", "true");
+        AppiumDriver driver = new IOSDriver(serverURL, capabilities);
+        driver.manage().timeouts().implicitlyWait(100, TimeUnit.SECONDS);
+
+        driver.get(WikiPageStart);
+        List<WebElement> webElementList = driver.findElements(AppiumTestsSelectors.languagesListByCSSSelector);
+        for (WebElement someElement : webElementList) {
+            System.out.println(someElement.getText());
+        }
         driver.quit();
     }
 }
